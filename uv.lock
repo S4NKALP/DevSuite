@@ -31,7 +31,6 @@ dependencies = [
     { name = "django-environ" },
     { name = "django-htmx" },
     { name = "django-jazzmin" },
-    { name = "django-nepali-datetime-field" },
     { name = "django-phonenumber-field", extra = ["phonenumbers"] },
     { name = "gunicorn" },
     { name = "mysqlclient" },
@@ -52,7 +51,6 @@ requires-dist = [
     { name = "django-environ" },
     { name = "django-htmx", specifier = ">=1.27.0" },
     { name = "django-jazzmin" },
-    { name = "django-nepali-datetime-field", specifier = ">=0.8.0" },
     { name = "django-phonenumber-field", extras = ["phonenumbers"], specifier = ">=8.4.0" },
     { name = "gunicorn" },
     { name = "mysqlclient" },
@@ -126,19 +124,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-nepali-datetime-field"
-version = "0.8.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-    { name = "nepali-datetime" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/8f/2d/5f080338f4b5e2cddbf91c312491042a761dc62e75a39aeae1ff409f55df/django_nepali_datetime_field-0.8.0.tar.gz", hash = "sha256:00d69f5d5aa6ea64e2a9964d5ba6c489b0e51325aeb7029e1b18cc4a323894ae", size = 5735, upload-time = "2025-03-09T04:19:49.575Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/15/fc/62ff130c5414a9030410673356d21e376e59cf045ecdabdef40aaf06f833/django_nepali_datetime_field-0.8.0-py3-none-any.whl", hash = "sha256:34eaab138856f69374db7af7274bafd7621224937feaf84a610e9d9872b52b37", size = 7696, upload-time = "2025-03-09T04:19:48.252Z" },
-]
-
-[[package]]
 name = "django-phonenumber-field"
 version = "8.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -209,15 +194,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/61/68/810093cb579daae426794bbd9d88aa830fae296e85172d18cb0f0e5dd4bc/mysqlclient-2.2.7.tar.gz", hash = "sha256:24ae22b59416d5fcce7e99c9d37548350b4565baac82f95e149cac6ce4163845", size = 91383, upload-time = "2025-01-10T12:06:00.763Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/29/01/e80141f1cd0459e4c9a5dd309dee135bbae41d6c6c121252fdd853001a8a/mysqlclient-2.2.7-cp313-cp313-win_amd64.whl", hash = "sha256:201a6faa301011dd07bca6b651fe5aaa546d7c9a5426835a06c3172e1056a3c5", size = 208000, upload-time = "2025-01-10T11:56:32.293Z" },
-]
-
-[[package]]
-name = "nepali-datetime"
-version = "1.0.8.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c9/49/ee387ca2e04fae93470baf5ae7468a05c76f662208ff9c01a30552cc77f6/nepali_datetime-1.0.8.4.tar.gz", hash = "sha256:933af0ae4545ee32bc2cdaeff40aa90c067f0f7c91908350371303c3dd976a6f", size = 20322, upload-time = "2025-05-10T20:39:05.187Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/a9/e655df60bee3fa82c18be0ca007335690ac5058015e7a344fc8c20f20344/nepali_datetime-1.0.8.4-py3-none-any.whl", hash = "sha256:13e052447167f8836618b23cc43bb5f3b259380603defdbfe8efe125f06b8462", size = 18636, upload-time = "2025-05-10T20:39:03.955Z" },
 ]
 
 [[package]]
