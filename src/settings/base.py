@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 THIRD_PARTY_APPS = [
     "django_components",
     "django_htmx",
-    "nepali_datetime_field",
+    "phonenumber_field",
     "babel",
 ]
 
