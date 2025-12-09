@@ -1,9 +1,13 @@
 from django.contrib import admin
-from django.utils.html import format_html
 from django.utils.timezone import localtime
 from django.utils.translation import gettext_lazy as _
 
-from src.admin.base import admin_site
+from src.admin.shared import (
+    admin_site,
+    format_badge,
+    format_placeholder,
+    format_strong,
+)
 from src.models.productivity import Note, TimeEntry
 
 
@@ -34,7 +38,7 @@ class NoteAdmin(admin.ModelAdmin):
 
     def title_display(self, obj):
         """Show truncated title for clarity."""
-        return format_html("<strong>{}</strong>", obj.title[:60])
+        return format_strong(obj.title[:60])
 
     title_display.short_description = "Title"
 
@@ -77,17 +81,17 @@ class TimeEntryAdmin(admin.ModelAdmin):
     readonly_fields = ("duration",)
 
     def description_display(self, obj):
-        return format_html("<strong>{}</strong>", obj.description[:50])
+        return format_strong(obj.description[:50])
 
     description_display.short_description = "Description"
 
     def project_display(self, obj):
-        return obj.project.name if obj.project else "—"
+        return obj.project.name if obj.project else format_placeholder()
 
     project_display.short_description = "Project"
 
     def task_display(self, obj):
-        return obj.task.name if obj.task else "—"
+        return obj.task.name if obj.task else format_placeholder()
 
     task_display.short_description = "Task"
 
@@ -95,7 +99,7 @@ class TimeEntryAdmin(admin.ModelAdmin):
         return (
             localtime(obj.start_time).strftime("%Y-%m-%d %H:%M")
             if obj.start_time
-            else "—"
+            else format_placeholder()
         )
 
     start_time_display.short_description = "Start"
@@ -103,7 +107,7 @@ class TimeEntryAdmin(admin.ModelAdmin):
     def end_time_display(self, obj):
         if obj.end_time:
             return localtime(obj.end_time).strftime("%Y-%m-%d %H:%M")
-        return format_html("<span style='color: #999;'>In Progress</span>")
+        return format_badge("In Progress", background="#999")
 
     end_time_display.short_description = "End"
 
@@ -111,12 +115,8 @@ class TimeEntryAdmin(admin.ModelAdmin):
         if obj.duration:
             hours = obj.duration.total_seconds() / 3600
             color = "#28a745" if hours < 8 else "#f39c12"
-            return format_html(
-                "<span style='color: {}; font-weight: 600;'>{:.2f} hrs</span>",
-                color,
-                hours,
-            )
-        return format_html("<span style='color: #888;'>—</span>")
+            return format_badge(f"{hours:.2f} hrs", background=color)
+        return format_placeholder()
 
     duration_display.short_description = "Duration"
 

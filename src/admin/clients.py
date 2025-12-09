@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.forms import ModelForm
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.formfields import SplitPhoneNumberField
 
-# Assuming these imports are correct based on your setup
-from src.admin.base import admin_site
+from src.admin.shared import (
+    admin_site,
+    format_placeholder,
+    format_strong_with_subtext,
+)
 from src.models.clients import Client
 
 
@@ -64,11 +66,7 @@ class ClientAdmin(admin.ModelAdmin):
 
     def name_display(self, obj):
         """Display name with subtle emphasis."""
-        return format_html(
-            "<strong>{}</strong><br><small style='color: #888;'>{}</small>",
-            obj.name,
-            obj.short_code or "—",
-        )
+        return format_strong_with_subtext(obj.name, obj.short_code)
 
     name_display.short_description = "Client"
 
@@ -77,7 +75,7 @@ class ClientAdmin(admin.ModelAdmin):
         if obj.phone:
             # Uses the .as_international property from the PhoneNumber wrapper
             return obj.phone.as_international
-        return "—"
+        return format_placeholder()
 
     formatted_phone.short_description = "Phone"
 

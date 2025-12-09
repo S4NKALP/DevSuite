@@ -1,8 +1,12 @@
 from django.contrib import admin
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from src.admin.base import admin_site
+from src.admin.shared import (
+    admin_site,
+    format_badge,
+    format_currency,
+    format_strong_with_subtext,
+)
 from src.models.finance import Expense, Invoice, Payment
 
 
@@ -76,11 +80,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     )
 
     def client_display(self, obj):
-        return format_html(
-            "<strong>{}</strong><br><small>{}</small>",
-            obj.client.name,
-            obj.client.short_code,
-        )
+        return format_strong_with_subtext(obj.client.name, obj.client.short_code)
 
     client_display.short_description = "Client"
 
@@ -90,7 +90,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     project_display.short_description = "Project"
 
     def amount_display(self, obj):
-        return format_html("<b>${:,.2f}</b>", obj.amount)
+        return format_currency(obj.amount)
 
     amount_display.short_description = "Amount"
 
@@ -103,11 +103,7 @@ class InvoiceAdmin(admin.ModelAdmin):
             "CANCELLED": "#6c757d",
         }
         color = color_map.get(obj.status, "#333")
-        return format_html(
-            "<span style='color: white; background: {}; padding: 3px 8px; border-radius: 6px; font-size: 12px;'>{}</span>",
-            color,
-            obj.get_status_display(),
-        )
+        return format_badge(obj.get_status_display(), background=color)
 
     status_badge.short_description = "Status"
 
@@ -154,7 +150,7 @@ class ExpenseAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at",)
 
     def amount_display(self, obj):
-        return format_html("<b>${:,.2f}</b>", obj.amount)
+        return format_currency(obj.amount)
 
     amount_display.short_description = "Amount"
 
@@ -182,15 +178,13 @@ class PaymentAdmin(admin.ModelAdmin):
     )
 
     def invoice_display(self, obj):
-        return format_html(
-            "<strong>{}</strong><br><small>{}</small>",
-            obj.invoice.invoice_number,
-            obj.invoice.client.name,
+        return format_strong_with_subtext(
+            obj.invoice.invoice_number, obj.invoice.client.name
         )
 
     invoice_display.short_description = "Invoice"
 
     def amount_display(self, obj):
-        return format_html("<b>${:,.2f}</b>", obj.amount)
+        return format_currency(obj.amount)
 
     amount_display.short_description = "Amount"

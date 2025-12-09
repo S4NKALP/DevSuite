@@ -1,9 +1,17 @@
 from django.contrib import admin
 from django.utils import timezone
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from src.admin.base import admin_site
+from src.admin.shared import (
+    admin_site,
+    format_badge,
+    format_boolean_icon,
+    format_currency,
+    format_link,
+    format_placeholder,
+    format_strong,
+    format_strong_with_subtext,
+)
 from src.models.services import Credential, Service
 
 
@@ -75,7 +83,7 @@ class ServiceAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
 
     def name_display(self, obj):
-        return format_html("<strong>{}</strong>", obj.name)
+        return format_strong(obj.name)
 
     name_display.short_description = "Service"
 
@@ -93,28 +101,24 @@ class ServiceAdmin(admin.ModelAdmin):
             "OTHER": "#6c757d",
         }
         color = color_map.get(obj.service_type, "#333")
-        return format_html(
-            "<span style='background:{}; color:white; padding:3px 8px; border-radius:6px; font-size:12px;'>{}</span>",
-            color,
-            obj.get_service_type_display(),
-        )
+        return format_badge(obj.get_service_type_display(), background=color)
 
     type_badge.short_description = "Type"
 
     def cost_display(self, obj):
-        return format_html("<b>${:,.2f}</b>", obj.cost)
+        return format_currency(obj.cost)
 
     cost_display.short_description = "Cost"
 
     def renewal_price_display(self, obj):
-        return format_html("<b>${:,.2f}</b>", obj.renewal_price)
+        return format_currency(obj.renewal_price)
 
     renewal_price_display.short_description = "Renewal"
 
     def expiry_display(self, obj):
         """Color-coded expiry indicator."""
         if not obj.expiry_date:
-            return format_html("<span style='color:#888;'>—</span>")
+            return format_placeholder()
         today = timezone.localdate()
         delta = (obj.expiry_date - today).days
 
@@ -138,11 +142,7 @@ class ServiceAdmin(admin.ModelAdmin):
     expiry_display.short_description = "Expiry"
 
     def auto_renew_display(self, obj):
-        icon = "✅" if obj.auto_renew else "❌"
-        color = "#28a745" if obj.auto_renew else "#999"
-        return format_html(
-            f"<span style='color:{color}; font-size:14px;'>{icon}</span>"
-        )
+        return format_boolean_icon(obj.auto_renew)
 
     auto_renew_display.short_description = "Auto Renew"
 
@@ -183,23 +183,17 @@ class CredentialAdmin(admin.ModelAdmin):
 
     # --- DISPLAY HELPERS ---
     def service_display(self, obj):
-        return format_html(
-            "<strong>{}</strong><br><small>{}</small>",
-            obj.service.name,
-            obj.service.client.name,
-        )
+        return format_strong_with_subtext(obj.service.name, obj.service.client.name)
 
     service_display.short_description = "Service"
 
     def username_display(self, obj):
-        return obj.username or format_html("<span style='color:#888;'>—</span>")
+        return obj.username or format_placeholder()
 
     username_display.short_description = "Username"
 
     def url_display(self, obj):
-        if obj.url:
-            return format_html("<a href='{}' target='_blank'>{}</a>", obj.url, obj.url)
-        return format_html("<span style='color:#888;'>—</span>")
+        return format_link(obj.url)
 
     url_display.short_description = "URL"
 

@@ -1,9 +1,15 @@
 from django.contrib import admin
 from django.utils import timezone
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from src.admin.base import admin_site
+from src.admin.shared import (
+    admin_site,
+    format_badge,
+    format_currency,
+    format_placeholder,
+    format_strong,
+    format_strong_with_subtext,
+)
 from src.models.projects import Milestone, Project, Task
 
 
@@ -73,7 +79,7 @@ class ProjectAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
 
     def name_display(self, obj):
-        return format_html("<strong>{}</strong>", obj.name)
+        return format_strong(obj.name)
 
     name_display.short_description = "Project"
 
@@ -91,16 +97,12 @@ class ProjectAdmin(admin.ModelAdmin):
             "CANCELLED": "#dc3545",
         }
         color = color_map.get(obj.status, "#999")
-        return format_html(
-            "<span style='background:{}; color:white; padding:3px 8px; border-radius:6px; font-size:12px;'>{}</span>",
-            color,
-            obj.get_status_display(),
-        )
+        return format_badge(obj.get_status_display(), background=color)
 
     status_badge.short_description = "Status"
 
     def budget_display(self, obj):
-        return format_html("<b>${:,.2f}</b>", obj.budget) if obj.budget else "—"
+        return format_currency(obj.budget) if obj.budget else format_placeholder()
 
     budget_display.short_description = "Budget"
 
@@ -131,7 +133,7 @@ class MilestoneAdmin(admin.ModelAdmin):
     )
 
     def title_display(self, obj):
-        return format_html("<strong>{}</strong>", obj.title)
+        return format_strong(obj.title)
 
     title_display.short_description = "Title"
 
@@ -143,11 +145,7 @@ class MilestoneAdmin(admin.ModelAdmin):
     def status_badge(self, obj):
         color = "#28a745" if obj.is_completed else "#dc3545"
         text = "Completed" if obj.is_completed else "Pending"
-        return format_html(
-            "<span style='background:{}; color:white; padding:2px 7px; border-radius:5px; font-size:12px;'>{}</span>",
-            color,
-            text,
-        )
+        return format_badge(text, background=color)
 
     status_badge.short_description = "Status"
 
@@ -189,7 +187,7 @@ class TaskAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at")
 
     def title_display(self, obj):
-        return format_html("<strong>{}</strong>", obj.title)
+        return format_strong(obj.title)
 
     title_display.short_description = "Title"
 
@@ -200,11 +198,11 @@ class TaskAdmin(admin.ModelAdmin):
 
     def due_date_display(self, obj):
         if not obj.due_date:
-            return format_html("<span style='color:#999;'>No due date</span>")
-        elif obj.due_date < timezone.localdate():
-            return format_html("<span style='color:#dc3545;'>{}</span>", obj.due_date)
-        elif obj.due_date == timezone.localdate():
-            return format_html("<span style='color:#f39c12;'>Today</span>")
+            return format_placeholder(None, "No due date", "#999")
+        if obj.due_date < timezone.localdate():
+            return format_badge(obj.due_date, background="#dc3545")
+        if obj.due_date == timezone.localdate():
+            return format_badge("Today", background="#f39c12")
         return obj.due_date
 
     due_date_display.short_description = "Due Date"
@@ -217,11 +215,7 @@ class TaskAdmin(admin.ModelAdmin):
             "DONE": "#28a745",
         }
         color = color_map.get(obj.status, "#333")
-        return format_html(
-            "<span style='background:{}; color:white; padding:3px 8px; border-radius:6px; font-size:12px;'>{}</span>",
-            color,
-            obj.get_status_display(),
-        )
+        return format_badge(obj.get_status_display(), background=color)
 
     status_badge.short_description = "Status"
 
