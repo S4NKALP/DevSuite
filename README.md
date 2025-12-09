@@ -1,6 +1,6 @@
-# config
+# .
 
-A Django project created with django-setup.
+A Django project created with [djinitx/djinit/dj](https://github.com/S4NKALP/djinit).
 
 ## Features
 
@@ -10,6 +10,22 @@ A Django project created with django-setup.
 - Production-ready configuration
 
 ## Setup
+
+### Using Just (Recommended)
+
+1. Set environment variables in `.env` file
+
+2. Run setup (installs dependencies, runs migrations, creates superuser):
+   ```bash
+   just setup
+   ```
+
+3. Start development server:
+   ```bash
+   just dev
+   ```
+
+### Traditional Method
 
 1. Install dependencies:
    ```bash
@@ -33,31 +49,54 @@ A Django project created with django-setup.
    python manage.py runserver
    ```
 
+## Available Commands
+
+Run `just` to see all available commands, including:
+
+- `just dev` - Run development server
+- `just migrate` - Run migrations
+- `just makemigrations` - Create migrations
+- `just createsuperuser` - Create superuser
+- `just test` - Run tests
+- `just lint` - Lint code
+- `just format` - Format code
+- `just shell` - Django shell
+- `just clean` - Clean cache files
+
 ## Project Structure
 
 ```
-config/
-├── config/
+./
+├── src/
 │   ├── settings/
 │   │   ├── base.py
 │   │   ├── development.py
 │   │   └── production.py
+│   ├── admin/
+│   ├── api/              # API endpoints organized by model
+│   │   ├── user/         # Example: if you have a User model
+│   │   │   ├── views.py
+│   │   │   ├── serializers.py
+│   │   │   └── urls.py
+│   │   └── urls.py
+│   ├── models/           # Django models
+│   ├── tests/
 │   ├── urls.py
 │   ├── wsgi.py
 │   └── asgi.py
-├── clients/
-├── core/
-├── finance/
-├── productivity/
-├── services/
-├── core/
-├── notifications/
-├── projects/
 ├── manage.py
 ├── requirements.txt
 ├── pyproject.toml
 ├── .env.sample
 └── README.md
+
+**Note:** For the single folder layout, organize your API endpoints by model name under the `api/` directory.
+For example, if you have a `User` model in `models/user.py`, create:
+- `api/user/views.py` - API views for User
+- `api/user/serializers.py` - Serializers for User
+- `api/user/urls.py` - URL patterns for User endpoints
+
+See the README files in `api/` and `models/` directories for more details.
 ```
 
 ## API Documentation

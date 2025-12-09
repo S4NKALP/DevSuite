@@ -3,13 +3,13 @@
 #--------------------------------------------------#
 
 Django
-python-dotenv
+django-environ
 django-jazzmin
 djangorestframework
 djangorestframework_simplejwt
 drf-spectacular
 django-cors-headers
 whitenoise
-psycopg2-binary
+mysqlclient
 gunicorn
 dj-database-url

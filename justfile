@@ -1,4 +1,4 @@
-# Justfile for config
+# Justfile for .
 # Task runner for Django development
 # Install just: https://github.com/casey/just
 
@@ -108,15 +108,15 @@ dbshell:
 
 # Start production server with gunicorn
 server:
-    uv run gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    uv run gunicorn ..wsgi:application --bind 0.0.0.0:8000
 
 # Start production server with gunicorn workers
 server-prod WORKERS="4":
-    uv run gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers {{WORKERS}}
+    uv run gunicorn ..wsgi:application --bind 0.0.0.0:8000 --workers {{WORKERS}}
 
 # Start production server with gunicorn and reload on file changes
 server-watch:
-    uv run gunicorn config.wsgi:application --bind 0.0.0.0:8000 --reload
+    uv run gunicorn ..wsgi:application --bind 0.0.0.0:8000 --reload
 
 # Clean Python cache files
 clean:
