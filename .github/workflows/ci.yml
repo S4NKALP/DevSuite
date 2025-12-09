@@ -62,7 +62,7 @@ jobs:
 
     - name: Run Django tests
       env:
-        DJANGO_SETTINGS_MODULE: ssgd.settings.development
+        DJANGO_SETTINGS_MODULE: src.settings.development
         SECRET_KEY: test-secret-key-for-ci
         ALLOWED_HOSTS: localhost
         DB_NAME: test_db
@@ -76,7 +76,7 @@ jobs:
 
     - name: Check migrations
       env:
-        DJANGO_SETTINGS_MODULE: ssgd.settings.development
+        DJANGO_SETTINGS_MODULE: src.settings.development
         SECRET_KEY: test-secret-key-for-ci
         ALLOWED_HOSTS: localhost
         DB_NAME: test_db
@@ -107,7 +107,7 @@ jobs:
 
     - name: Run security check
       env:
-        DJANGO_SETTINGS_MODULE: ssgd.settings.development
+        DJANGO_SETTINGS_MODULE: src.settings.development
         SECRET_KEY: test-secret-key-for-ci
         ALLOWED_HOSTS: localhost
       run: uv run python manage.py check --deploy
