@@ -1,19 +1,32 @@
 from django.contrib import admin
+from django.forms import ModelForm
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.formfields import SplitPhoneNumberField
 
+# Assuming these imports are correct based on your setup
 from src.admin.base import admin_site
 from src.models.clients import Client
 
 
+class ClientAdminForm(ModelForm):
+    phone = SplitPhoneNumberField(required=True)
+
+    class Meta:
+        model = Client
+        fields = "__all__"
+
+
 @admin.register(Client, site=admin_site)
 class ClientAdmin(admin.ModelAdmin):
+    form = ClientAdminForm
+
     list_display = (
         "name_display",
         "short_code",
         "company_name",
         "email",
-        "phone",
+        "formatted_phone",
         "created_at",
         "updated_at",
     )
@@ -42,7 +55,7 @@ class ClientAdmin(admin.ModelAdmin):
             _("Timestamps"),
             {
                 "fields": ("created_at", "updated_at"),
-                "classes": ("collapse",),  # collapsible section for cleaner UI
+                "classes": ("collapse",),
             },
         ),
     )
@@ -59,15 +72,26 @@ class ClientAdmin(admin.ModelAdmin):
 
     name_display.short_description = "Client"
 
+    def formatted_phone(self, obj):
+        """Displays the phone number in International format on the list view."""
+        if obj.phone:
+            # Uses the .as_international property from the PhoneNumber wrapper
+            return obj.phone.as_international
+        return "—"
+
+    formatted_phone.short_description = "Phone"
+
     def save_model(self, request, obj, form, change):
-        """
-        Ensure short_code generation happens gracefully and show a message.
-        """
-        if not obj.short_code:
-            generated = obj.generate_short_code()
-            obj.short_code = generated
+        # Check if the short_code was empty before this save operation
+        short_code_was_empty = not obj.short_code
+
+        # Call the parent save method, which calls obj.save() and triggers
+        # the short_code generation logic you put in the model.
+        super().save_model(request, obj, form, change)
+
+        # Check if it was generated and display a message
+        if short_code_was_empty and obj.short_code:
             self.message_user(
                 request,
-                f"Short code '{generated}' was automatically generated for client '{obj.name}'.",
+                f"Short code '{obj.short_code}' was automatically generated for client '{obj.name}'.",
             )
-        super().save_model(request, obj, form, change)

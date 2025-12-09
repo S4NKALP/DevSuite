@@ -23,6 +23,7 @@ THIRD_PARTY_APPS = [
     "django_htmx",
     "nepali_datetime_field",
     "phonenumber_field",
+    "babel",
 ]
 
 USER_DEFINED_APPS = [
