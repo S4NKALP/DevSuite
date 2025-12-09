@@ -5,15 +5,10 @@
 Django
 django-environ
 django-jazzmin
-djangorestframework
-djangorestframework_simplejwt
-drf-spectacular
-django-cors-headers
 whitenoise
 mysqlclient
 gunicorn
 dj-database-url
 django-components
 django-htmx
-nepali-datetime-field
 django-phonenumber-field[phonenumbers]

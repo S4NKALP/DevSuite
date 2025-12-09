@@ -15,7 +15,6 @@ dependencies = [
     "gunicorn",
     "django-components>=0.143.2",
     "django-htmx>=1.27.0",
-    "django-nepali-datetime-field>=0.8.0",
     "django-phonenumber-field[phonenumbers]>=8.4.0",
     "babel>=2.17.0",
 ]
