@@ -1,6 +1,6 @@
 """generated with djinit"""
 
-from .base import *
+from .base import *  # noqa: F403, F405
 
 SECRET_KEY = "RKOHQN9iLI(J50m4KW=ge(t#69PI&BTI!yp*iq&0wtcW350dD="
 
@@ -15,7 +15,7 @@ ALLOWED_HOSTS = ["*"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",  # noqa: F405
         "OPTIONS": {
             "transaction_mode": "IMMEDIATE",
             "timeout": 5,  # seconds

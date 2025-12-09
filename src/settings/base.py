@@ -22,6 +22,7 @@ THIRD_PARTY_APPS = [
     "django_components",
     "django_htmx",
     "nepali_datetime_field",
+    "phonenumber_field",
 ]
 
 USER_DEFINED_APPS = [
@@ -94,7 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kathmandu"
 USE_I18N = True
 USE_TZ = True
 

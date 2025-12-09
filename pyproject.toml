@@ -16,6 +16,7 @@ dependencies = [
     "django-components>=0.143.2",
     "django-htmx>=1.27.0",
     "django-nepali-datetime-field>=0.8.0",
+    "django-phonenumber-field[phonenumbers]>=8.4.0",
 ]
 
 [tool.ruff]
@@ -39,3 +40,8 @@ ignore = [
 
 [tool.ruff.lint.isort]
 known-first-party = ["."]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.8",
+]
