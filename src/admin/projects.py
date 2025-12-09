@@ -8,7 +8,6 @@ from src.admin.shared import (
     format_currency,
     format_placeholder,
     format_strong,
-    format_strong_with_subtext,
 )
 from src.models.projects import Milestone, Project, Task
 

@@ -6,6 +6,7 @@ from src.admin.shared import (
     admin_site,
     format_badge,
     format_boolean_icon,
+    format_colored_text_with_subtext,
     format_currency,
     format_link,
     format_placeholder,
@@ -132,12 +133,7 @@ class ServiceAdmin(admin.ModelAdmin):
             color = "#28a745"
             label = f"In {delta}d"
 
-        return format_html(
-            "<span style='color:{}; font-weight:600;'>{}</span><br><small>{}</small>",
-            color,
-            label,
-            obj.expiry_date,
-        )
+        return format_colored_text_with_subtext(color, label, obj.expiry_date)
 
     expiry_display.short_description = "Expiry"
 

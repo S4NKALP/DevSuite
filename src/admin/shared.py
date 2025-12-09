@@ -1,5 +1,7 @@
 from django.utils.html import format_html
-from src.admin.base import * #noqa: F401
+
+from src.admin.base import admin_site  # noqa: F401
+
 
 def format_strong(text):
     return format_html("<strong>{}</strong>", text)
@@ -52,4 +54,13 @@ def format_link(url, label=None):
         format_html("<a href='{}' target='_blank'>{}</a>", url, label or url)
         if url
         else format_placeholder()
+    )
+
+
+def format_colored_text_with_subtext(color, label, subtext):
+    return format_html(
+        "<span style='color:{}; font-weight:600;'>{}</span><br><small>{}</small>",
+        color,
+        label,
+        subtext,
     )
