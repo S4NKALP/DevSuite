@@ -1,111 +1,111 @@
-# .
+# DevSuite
 
-A Django project folder structure generated with [djinitx/djinit/dj](https://github.com/S4NKALP/djinit).
+DevSuite is a comprehensive management system designed for developers and agencies to streamline client management, project tracking, finance, and productivity.
 
 ## Features
 
-- Modern project structure with environment-specific settings
-- Pre-configured REST API with JWT authentication
-- Essential dependencies and utilities
-- Production-ready configuration
+-   **Client Management**: Track clients, contact details, and unique short codes.
+-   **Project Management**: Manage projects, milestones, and tasks with deadlines.
+-   **Service Management**: Track recurring services (domains, hosting) and their expiry dates.
+-   **Finance**: Generate invoices, track payments, and manage expenses.
+-   **Productivity**: Log time entries and track duration for projects.
+-   **Automated Notifications**: Email alerts for deadlines, due dates, and service expirations.
+
+## Modules
+
+The project is organized into the following core modules in `src/models/`:
+
+-   **Clients** (`clients.py`): `Client` model.
+-   **Projects** (`projects.py`): `Project`, `Milestone`, `Task` models.
+-   **Services** (`services.py`): `Service`, `Credential` models.
+-   **Finance** (`finance.py`): `Invoice`, `Payment`, `Expense` models.
+-   **Productivity** (`productivity.py`): `TimeEntry`, `Note` models.
+-   **Notifications** (`notifications.py`): `Notification` model and sending logic.
 
 ## Setup
 
-### Using Just (Recommended)
+### Prerequisites
+-   Python 3.10+
+-   `just` (optional, for command shortcuts)
 
-1. Set environment variables in `.env` file
+### Installation
 
-2. Run setup (installs dependencies, runs migrations, creates superuser):
+#### Using Just (Recommended)
 
-   ```bash
-   just setup
-   ```
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd devsuite
+    ```
 
-3. Start development server:
-   ```bash
-   just dev
-   ```
+2.  **Configure Environment**:
+    Copy `.env.sample` to `.env` and update the values:
+    ```bash
+    cp .env.sample .env
+    ```
 
-### Traditional Method
+3.  **Run Setup**:
+    This installs dependencies, runs migrations, and creates a superuser.
+    ```bash
+    just setup
+    ```
 
-1. Install dependencies:
+4.  **Run Server**:
+    ```bash
+    just dev
+    ```
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+#### Traditional Method
 
-2. Set environment variables in `.env` file
+1.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-3. Run migrations:
+2.  **Configure Environment**:
+    Copy `.env.sample` to `.env` and update the values:
+    ```bash
+    cp .env.sample .env
+    ```
 
-   ```bash
-   python manage.py migrate
-   ```
+3.  **Initialize Database**:
+    ```bash
+    python manage.py migrate
+    python manage.py createsuperuser
+    ```
 
-4. Create superuser:
+4.  **Run Server**:
+    ```bash
+    python manage.py runserver
+    ```
 
-   ```bash
-   python manage.py createsuperuser
-   ```
+## Notifications
 
-5. Start development server:
-   ```bash
-   python manage.py runserver
-   ```
+DevSuite includes an automated email notification system.
 
-## Available Commands
+-   **Triggers**: Project deadlines, Milestone due dates, Service expiry, Invoice due dates.
+-   **Command**: `python manage.py send_notifications`
+-   **Automation**: Use `scripts/run_notifications.sh` in a cron job.
 
-Run `just` to see all available commands, including:
+For detailed documentation, see [notifi.md](notifi.md).
 
-- `just dev` - Run development server
-- `just migrate` - Run migrations
-- `just makemigrations` - Create migrations
-- `just createsuperuser` - Create superuser
-- `just test` - Run tests
-- `just lint` - Lint code
-- `just format` - Format code
-- `just shell` - Django shell
-- `just clean` - Clean cache files
+## Testing
 
-## Project Structure
+Run the full test suite with:
 
-```
-./
-├── src/
-│   ├── settings/
-│   │   ├── base.py
-│   │   ├── development.py
-│   │   └── production.py
-│   ├── admin/
-│   ├── api/              # API endpoints organized by model
-│   │   ├── user/         # Example: if you have a User model
-│   │   │   ├── views.py
-│   │   │   ├── serializers.py
-│   │   │   └── urls.py
-│   │   └── urls.py
-│   ├── models/           # Django models
-│   ├── tests/
-│   ├── urls.py
-│   ├── wsgi.py
-│   └── asgi.py
-├── manage.py
-├── requirements.txt
-├── pyproject.toml
-├── .env.sample
-└── README.md
-
-**Note:** For the single folder layout, organize your API endpoints by model name under the `api/` directory.
-For example, if you have a `User` model in `models/user.py`, create:
-- `api/user/views.py` - API views for User
-- `api/user/serializers.py` - Serializers for User
-- `api/user/urls.py` - URL patterns for User endpoints
-
-See the README files in `api/` and `models/` directories for more details.
+```bash
+python manage.py test
 ```
 
-## API Documentation
+For detailed testing documentation, see [testing.md](testing.md).
 
-When running in development mode, API documentation is available at:
+## Management Commands
 
-- Swagger UI: http://localhost:8000/docs/
-- Schema: http://localhost:8000/schema/
+-   `send_notifications`: Checks for upcoming events and sends emails.
+    ```bash
+    python manage.py send_notifications
+    ```
+
+## Admin Interface
+
+Access the Django admin at `http://localhost:8000/admin/` to manage all records.
