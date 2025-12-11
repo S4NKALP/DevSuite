@@ -34,8 +34,8 @@ The project is organized into the following core modules in `src/models/`:
 
 1.  **Clone the repository**:
     ```bash
-    git clone <repository-url>
-    cd devsuite
+    git clone https://github.com/S4NKALP/DevSuite.git
+    cd DevSuite
     ```
 
 2.  **Configure Environment**:
