@@ -4,8 +4,8 @@
 from src.admin import (  # noqa: F401
     clients,
     finance,
+    notifications,
     productivity,
     projects,
     services,
-    notifications,
 )

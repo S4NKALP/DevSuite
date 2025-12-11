@@ -1,6 +1,8 @@
 from django.contrib import admin
+
 from src.admin.base import admin_site
 from src.models.notifications import Notification
+
 
 @admin.register(Notification, site=admin_site)
 class NotificationAdmin(admin.ModelAdmin):
