@@ -86,6 +86,11 @@ class DevSuiteAdminSite(AdminSite):
                 "display_name": "Groups",
                 "order": 2,
             },
+            "Notification": {
+                "group": "System & Users",
+                "display_name": "Notifications",
+                "order": 3,
+            },
         }
 
         # Group models according to the model_map

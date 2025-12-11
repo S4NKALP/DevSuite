@@ -18,6 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Application definition
+ADMINS = [("Admin", env("ADMIN_EMAIL", default="admin@example.com"))]
+MANAGERS = ADMINS
+
 THIRD_PARTY_APPS = [
     "django_components",
     "django_htmx",

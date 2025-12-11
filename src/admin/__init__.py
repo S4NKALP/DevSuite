@@ -7,4 +7,5 @@ from src.admin import (  # noqa: F401
     productivity,
     projects,
     services,
+    notifications,
 )

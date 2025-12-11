@@ -1,6 +1,6 @@
 # .
 
-A Django project created with [djinitx/djinit/dj](https://github.com/S4NKALP/djinit).
+A Django project folder structure generated with [djinitx/djinit/dj](https://github.com/S4NKALP/djinit).
 
 ## Features
 
@@ -16,6 +16,7 @@ A Django project created with [djinitx/djinit/dj](https://github.com/S4NKALP/dji
 1. Set environment variables in `.env` file
 
 2. Run setup (installs dependencies, runs migrations, creates superuser):
+
    ```bash
    just setup
    ```
@@ -28,6 +29,7 @@ A Django project created with [djinitx/djinit/dj](https://github.com/S4NKALP/dji
 ### Traditional Method
 
 1. Install dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -35,11 +37,13 @@ A Django project created with [djinitx/djinit/dj](https://github.com/S4NKALP/dji
 2. Set environment variables in `.env` file
 
 3. Run migrations:
+
    ```bash
    python manage.py migrate
    ```
 
 4. Create superuser:
+
    ```bash
    python manage.py createsuperuser
    ```
@@ -102,5 +106,6 @@ See the README files in `api/` and `models/` directories for more details.
 ## API Documentation
 
 When running in development mode, API documentation is available at:
+
 - Swagger UI: http://localhost:8000/docs/
 - Schema: http://localhost:8000/schema/
