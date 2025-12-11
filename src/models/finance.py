@@ -23,7 +23,7 @@ class Invoice(TimeStampedModel):
     invoice_number = models.CharField(max_length=20, unique=True, editable=False)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date_issued = models.DateField(auto_now_add=True)
-    due_date = models.DateField(auto_now=True)
+    due_date = models.DateField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="DRAFT")
 
     def save(self, *args, **kwargs):
