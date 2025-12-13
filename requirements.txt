@@ -9,6 +9,7 @@ whitenoise
 mysqlclient
 gunicorn
 dj-database-url
-django-components
 django-htmx
 django-phonenumber-field[phonenumbers]
+django-browser-reload
+django-tailwind-css
