@@ -22,10 +22,11 @@ ADMINS = [("Admin", env("ADMIN_EMAIL", default="admin@example.com"))]
 MANAGERS = ADMINS
 
 THIRD_PARTY_APPS = [
-    "django_components",
     "django_htmx",
     "phonenumber_field",
     "babel",
+    "django_tailwind_cli",
+    "django_browser_reload",
 ]
 
 USER_DEFINED_APPS = [
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "src.urls"
@@ -60,7 +62,7 @@ ROOT_URLCONF = "src.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -103,8 +105,9 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files and media files
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -112,3 +115,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Tailwind CSS
+TAILWIND_CLI_USE_DAISY_UI = True
