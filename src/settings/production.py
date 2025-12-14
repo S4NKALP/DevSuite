@@ -7,8 +7,17 @@ SECRET_KEY = env("SECRET_KEY")  # noqa: F405
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])  # noqa: F405
 
 # Database
-# Using dj_database_url (recommended for production)
-DATABASES = {"default": env.db("DATABASE_URL")}  # noqa: F405
+# Using individual database parameters
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+    }
+}
 
 # CORS settings for production
 # Filter out empty strings from FRONTEND_URL
