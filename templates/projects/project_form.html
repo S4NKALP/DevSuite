@@ -1,0 +1,106 @@
+{% extends "shared/base.html" %}
+{% load static %}
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-24 px-4 max-w-7xl mx-auto min-h-screen flex flex-col pb-10">
+    <h2 class="text-2xl font-bold mb-6">{% if project %}Edit Project{% else %}New Project{% endif %}</h2>
+    {% include "projects/partials/project_form.html" %}
+</div>
+
+<script>
+    (function () {
+        const stepper = document.getElementById('wizard-validation-horizontal');
+        if (!stepper) return;
+
+        const navItems = stepper.querySelectorAll('[data-stepper-nav-item]');
+        const contentItems = stepper.querySelectorAll('[data-stepper-content-item]');
+        const backBtn = stepper.querySelector('[data-stepper-back-btn]');
+        const nextBtn = stepper.querySelector('[data-stepper-next-btn]');
+        const finishBtn = stepper.querySelector('[data-stepper-finish-btn]');
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateStepper() {
+            // Update Nav
+            navItems.forEach(item => {
+                const index = parseInt(JSON.parse(item.dataset.stepperNavItem).index);
+                const circle = item.querySelector('span > span');
+                const checkIcon = circle.querySelector('.icon-\\[tabler--check\\]');
+                const numberSpan = circle.querySelector('span:not([class*="icon"])');
+
+                // Reset classes
+                circle.classList.remove('bg-brand', 'text-white', 'bg-success', 'text-white');
+                circle.classList.add('text-bg-soft-neutral');
+                checkIcon.classList.add('hidden');
+                numberSpan.classList.remove('hidden');
+
+                if (index < currentStep) {
+                    // Completed
+                    circle.classList.remove('text-bg-soft-neutral');
+                    circle.classList.add('bg-success', 'text-white');
+                    checkIcon.classList.remove('hidden');
+                    numberSpan.classList.add('hidden');
+                } else if (index === currentStep) {
+                    // Active
+                    circle.classList.remove('text-bg-soft-neutral');
+                    circle.classList.add('bg-brand', 'text-white');
+                }
+            });
+
+            // Update Content
+            contentItems.forEach(item => {
+                const index = parseInt(JSON.parse(item.dataset.stepperContentItem).index);
+                if (index === currentStep) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update Buttons
+            if (currentStep === 1) {
+                backBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-flex';
+                finishBtn.style.display = 'none';
+            } else if (currentStep === totalSteps) {
+                backBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'inline-flex';
+            } else {
+                backBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'inline-flex';
+                finishBtn.style.display = 'none';
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            // Simple validation check for current step inputs
+            const currentContent = stepper.querySelector(`[data-stepper-content-item='{ "index": ${currentStep} }']`);
+            const inputs = currentContent.querySelectorAll('input, textarea, select');
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    valid = false;
+                    input.reportValidity();
+                }
+            });
+
+            if (valid && currentStep < totalSteps) {
+                currentStep++;
+                updateStepper();
+            }
+        });
+
+        backBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepper();
+            }
+        });
+
+        // Initialize
+        updateStepper();
+    })();
+</script>
+{% endblock %}

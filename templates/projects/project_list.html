@@ -1,0 +1,69 @@
+{% extends "shared/base.html" %}
+{% load static %}
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-24 px-4 max-w-7xl mx-auto min-h-screen flex flex-col pb-10">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Projects</h1>
+        <a href="{% url 'project_create' %}" class="btn btn-primary">
+            <span class="icon-[tabler--plus] size-5"></span>
+            New Project
+        </a>
+    </div>
+
+    <div class="overflow-x-auto bg-base-100 rounded-box shadow">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Client</th>
+                    <th>Status</th>
+                    <th>Deadline</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr class="hover">
+                    <td>
+                        <a href="{% url 'project_detail' pk=project.pk %}" class="font-bold hover:text-primary">
+                            {{ project.name }}
+                        </a>
+                        <div class="text-xs opacity-50">{{ project.description|truncatechars:50 }}</div>
+                    </td>
+                    <td>{{ project.client.name }}</td>
+                    <td>
+                        <div
+                            class="badge {% if project.status == 'COMPLETED' %}badge-success{% elif project.status == 'IN_PROGRESS' %}badge-info{% elif project.status == 'ON_HOLD' %}badge-warning{% elif project.status == 'CANCELLED' %}badge-error{% else %}badge-ghost{% endif %}">
+                            {{ project.get_status_display }}
+                        </div>
+                    </td>
+                    <td>{{ project.deadline|default:"-" }}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <a href="{% url 'project_edit' pk=project.pk %}" class="btn btn-sm btn-outline">
+                                <span class="icon-[tabler--edit] size-4"></span>
+                                Edit
+                            </a>
+                            <button class="btn btn-sm btn-outline btn-error"
+                                hx-delete="{% url 'project_delete' pk=project.pk %}" hx-confirm="Are you sure?"
+                                hx-target="closest tr" hx-swap="outerHTML">
+                                <span class="icon-[tabler--trash] size-4"></span>
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-10 text-base-content/50">
+                        No projects found. Create one to get started.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

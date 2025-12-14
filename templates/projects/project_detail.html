@@ -1,0 +1,69 @@
+{% extends "shared/base.html" %}
+{% load static %}
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-24 px-4 max-w-7xl mx-auto min-h-screen flex flex-col pb-10">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-bold flex items-center gap-3">
+                {{ project.name }}
+                <span
+                    class="badge badge-lg {% if project.status == 'COMPLETED' %}badge-success{% elif project.status == 'IN_PROGRESS' %}badge-info{% elif project.status == 'ON_HOLD' %}badge-warning{% elif project.status == 'CANCELLED' %}badge-error{% else %}badge-ghost{% endif %}">
+                    {{ project.get_status_display }}
+                </span>
+            </h1>
+            <p class="text-base-content/70 mt-1">
+                {{ project.client.name }} • Due: {{ project.deadline|default:"No deadline" }}
+            </p>
+
+        </div>
+        <div class="flex gap-2">
+            <a href="{% url 'project_edit' pk=project.pk %}" class="btn btn-outline">Edit Project</a>
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="bg-base-100 p-6 rounded-box shadow-sm mb-8">
+        <h3 class="font-bold text-lg mb-2">Description</h3>
+        <p class="whitespace-pre-wrap">{{ project.description }}</p>
+    </div>
+
+    <!-- Kanban Board -->
+    <div class="bg-base-100 p-6 rounded-box shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="font-bold text-lg">Tasks</h3>
+        </div>
+        <div id="kanban-board">
+            {% include "projects/partials/kanban_board.html" %}
+        </div>
+    </div>
+</div>
+
+<!-- Task Modal -->
+<dialog id="task_modal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg mb-4">Add New Task</h3>
+        <form hx-post="{% url 'task_create' project_id=project.pk %}" hx-target="#kanban-todo-list" hx-swap="beforeend"
+            hx-on::after-request="if(event.detail.successful) { this.reset(); task_modal.close(); }" class="space-y-4">
+            {% csrf_token %}
+            {% for field in task_form %}
+            <div class="form-control">
+                <label class="label" for="{{ field.id_for_label }}">
+                    <span class="label-text">{{ field.label }}</span>
+                </label>
+                {{ field }}
+            </div>
+            {% endfor %}
+            <div class="modal-action">
+                <button type="button" class="btn" onclick="task_modal.close()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Task</button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
+{% endblock %}
