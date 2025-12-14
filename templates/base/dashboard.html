@@ -1,0 +1,187 @@
+{% extends "shared/base.html" %}
+{% load static %}
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 pb-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-heading mb-2">Dashboard</h1>
+        <p class="text-body mb-8">Welcome back! {{ request.user.username }}</p>
+
+        <!-- Top Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-figure text-brand">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="stat-title text-body">Total Clients</div>
+                <div class="stat-value text-heading">{{ total_clients }}</div>
+                <div class="stat-desc text-body-secondary">Lifetime total</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-figure text-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+                </div>
+                <div class="stat-title text-body">Active Projects</div>
+                <div class="stat-value text-heading">{{ active_projects }}</div>
+                <div class="stat-desc text-body-secondary">In progress</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-figure text-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="stat-title text-body">Pending Tasks</div>
+                <div class="stat-value text-heading">{{ pending_tasks }}</div>
+                <div class="stat-desc text-body-secondary">Needs attention</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-figure text-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        class="inline-block w-8 h-8 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="stat-title text-body">Revenue</div>
+                <div class="stat-value text-heading">Rs.{{ total_income|floatformat:0 }}</div>
+                <div class="stat-desc text-body-secondary">Total paid invoices</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Recent Activity -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Recent Projects -->
+                <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                    <h2 class="text-xl font-bold text-heading mb-4">Recent Projects</h2>
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <thead>
+                                <tr class="text-body border-b border-default">
+                                    <th>Project</th>
+                                    <th>Client</th>
+                                    <th>Status</th>
+                                    <th>Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for project in recent_projects %}
+                                <tr class="hover:bg-neutral-tertiary border-b border-default last:border-0">
+                                    <td class="font-medium text-heading">{{ project.name }}</td>
+                                    <td class="text-body">{{ project.client.name }}</td>
+                                    <td>
+                                        <span
+                                            class="badge {% if project.status == 'In_PROGRESS' %}badge-info{% elif project.status == 'COMPLETED' %}badge-success{% else %}badge-ghost{% endif %} badge-sm">
+                                            {{ project.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td class="text-body-secondary text-sm">{{ project.updated_at|date:"M d" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-body-secondary py-4">No recent projects</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Tasks -->
+                <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                    <h2 class="text-xl font-bold text-heading mb-4">Recent Tasks</h2>
+                    <ul class="space-y-3">
+                        {% for task in recent_tasks %}
+                        <li
+                            class="flex items-center justify-between p-3 bg-neutral-primary rounded-lg border border-default">
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="badge {% if task.status == 'TODO' %}badge-warning{% elif task.status == 'IN_PROGRESS' %}badge-info{% else %}badge-success{% endif %} badge-xs">
+                                </div>
+                                <div>
+                                    <p class="font-medium text-heading">{{ task.title }}</p>
+                                    <p class="text-xs text-body-secondary">{{ task.project.name }}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-body-secondary">{{ task.updated_at|timesince }} ago</span>
+                        </li>
+                        {% empty %}
+                        <li class="text-center text-body-secondary py-2">No recent tasks</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Column: Overview & Alerts -->
+            <div class="space-y-8">
+                <!-- Financial Overview -->
+                <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                    <h2 class="text-xl font-bold text-heading mb-4">Financial Overview</h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-body">Pending Income</span>
+                            <span class="font-bold text-warning">Rs.{{ pending_income|floatformat:2 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-body">Monthly Expenses</span>
+                            <span class="font-bold text-error">Rs.{{ monthly_expenses|floatformat:2 }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-body">Overdue Invoices</span>
+                            <span class="badge badge-error">{{ overdue_invoices }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Deadlines -->
+                <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                    <h2 class="text-xl font-bold text-heading mb-4">Upcoming Deadlines</h2>
+                    <ul class="space-y-3">
+                        {% for project in upcoming_deadlines %}
+                        <li class="flex items-center justify-between">
+                            <span class="text-body truncate max-w-[60%]">{{ project.name }}</span>
+                            <span class="text-xs font-medium text-error">{{ project.deadline|date:"M d" }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="text-center text-body-secondary py-2">No upcoming deadlines</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Expiring Services -->
+                <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                    <h2 class="text-xl font-bold text-heading mb-4">Expiring Services</h2>
+                    <ul class="space-y-3">
+                        {% for service in expiring_services %}
+                        <li class="flex items-center justify-between">
+                            <span class="text-body truncate max-w-[60%]">{{ service.name }}</span>
+                            <span class="text-xs font-medium text-warning">{{ service.expiry_date|date:"M d" }}</span>
+                        </li>
+                        {% empty %}
+                        <li class="text-center text-body-secondary py-2">No expiring services</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

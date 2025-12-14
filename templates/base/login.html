@@ -3,21 +3,33 @@
 {% block content %}
 <div class="hero bg-base-200 min-h-screen">
     <div class="hero-content flex-col w-full">
-        <div class="text-center">
+        <div class="text-center max-w-md mx-auto">
             <img src="{% static 'img/devsuite.png' %}" alt="DevSuite" class="h-32 mx-auto mb-2">
-            <p class="py-2">
-                 comprehensive management system designed for developers and agencies to streamline client management, project tracking, finance, and productivity.
+
+            <p class="py-2 text-balance">
+                comprehensive management system designed for developers and agencies
+                to streamline client management, project tracking, finance, and productivity.
             </p>
         </div>
         <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl rounded-md">
             <div class="card-body">
-                <fieldset class="fieldset">
-                    <label class="label">Username</label>
-                    <input type="email" class="input" placeholder="Username" />
-                    <label class="label">Password</label>
-                    <input type="password" class="input" placeholder="Password" />
-                    <button class="btn btn-neutral mt-4">Login</button>
-                </fieldset>
+                {% if messages %}
+                {% for message in messages %}
+                <div role="alert" class="alert alert-{{ message.tags }} mb-4">
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    <fieldset class="fieldset">
+                        <label class="label">Username</label>
+                        <input type="text" name="username" class="input" placeholder="Username" required />
+                        <label class="label">Password</label>
+                        <input type="password" name="password" class="input" placeholder="Password" required />
+                        <button type="submit" class="btn btn-neutral mt-4">Login</button>
+                    </fieldset>
+                </form>
             </div>
         </div>
     </div>
