@@ -9,4 +9,5 @@ urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")),
     path("", include("src.api.base.urls")),
     path("clients/", include("src.api.clients.urls")),
+    path("projects/", include("src.api.projects.urls")),
 ]
