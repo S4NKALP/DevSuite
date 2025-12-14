@@ -9,7 +9,7 @@ class Client(TimeStampedModel):
     name = models.CharField(max_length=255, db_index=True)
     short_code = models.CharField(max_length=6, unique=True, blank=True)
     email = models.EmailField()
-    phone = PhoneNumberField(region="NP")
+    phone = PhoneNumberField()
     address = models.TextField()
     company_name = models.CharField(max_length=255, blank=True)
 
