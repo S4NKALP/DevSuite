@@ -10,6 +10,7 @@ whitenoise
 gunicorn
 dj-database-url
 django-htmx
+babel
 django-phonenumber-field[phonenumbers]
 django-browser-reload
 django-tailwind-cli
