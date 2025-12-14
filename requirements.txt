@@ -6,7 +6,7 @@ Django
 django-environ
 django-jazzmin
 whitenoise
-mysqlclient
+# mysqlclient
 gunicorn
 dj-database-url
 django-htmx
