@@ -24,7 +24,6 @@ MANAGERS = ADMINS
 THIRD_PARTY_APPS = [
     "django_htmx",
     "phonenumber_field",
-    "babel",
     "django_tailwind_cli",
     "django_browser_reload",
 ]
