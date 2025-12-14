@@ -1,0 +1,239 @@
+<div data-stepper="" class="bg-base-100 w-full rounded-lg p-4 shadow-base-300/20 shadow-sm"
+    id="wizard-validation-horizontal">
+    <!-- Stepper Nav -->
+    <ul class="relative flex flex-col gap-2 md:flex-row">
+        <li class="group flex flex-1 flex-col items-center gap-2 md:flex-row" data-stepper-nav-item='{ "index": 1 }'>
+            <span class="min-h-7.5 min-w-7.5 inline-flex flex-col items-center gap-2 align-middle text-sm md:flex-row">
+                <span
+                    class="stepper-active:text-bg-primary stepper-active:shadow-sm shadow-base-300/20 stepper-success:text-bg-primary stepper-success:shadow-sm stepper-completed:text-bg-success stepper-error:text-bg-error text-bg-soft-neutral flex size-7.5 shrink-0 items-center justify-center rounded-full font-medium">
+                    <span class="stepper-success:hidden stepper-error:hidden stepper-completed:hidden text-sm">1</span>
+                    <span class="icon-[tabler--check] stepper-success:block hidden size-4 shrink-0"></span>
+                    <span class="icon-[tabler--x] stepper-error:block hidden size-4 shrink-0"></span>
+                </span>
+                <span class="text-base-content text-nowrap font-medium">Basic Info</span>
+            </span>
+            <div
+                class="stepper-success:bg-primary stepper-completed:bg-success bg-base-content/20 h-px w-full group-last:hidden max-md:mt-2 max-md:h-8 max-md:w-px md:flex-1">
+            </div>
+        </li>
+        <li class="group flex flex-1 flex-col items-center gap-2 md:flex-row" data-stepper-nav-item='{ "index": 2 }'>
+            <span class="min-h-7.5 min-w-7.5 inline-flex flex-col items-center gap-2 align-middle text-sm md:flex-row">
+                <span
+                    class="stepper-active:text-bg-primary stepper-active:shadow-sm shadow-base-300/20 stepper-success:text-bg-primary stepper-success:shadow-sm stepper-completed:text-bg-success stepper-error:text-bg-error text-bg-soft-neutral flex size-7.5 shrink-0 items-center justify-center rounded-full font-medium">
+                    <span class="stepper-success:hidden stepper-error:hidden stepper-completed:hidden text-sm">2</span>
+                    <span class="icon-[tabler--check] stepper-success:block hidden size-4 shrink-0"></span>
+                    <span class="icon-[tabler--x] stepper-error:block hidden size-4 shrink-0"></span>
+                </span>
+                <span class="text-base-content text-nowrap font-medium">Details</span>
+            </span>
+            <div
+                class="stepper-success:bg-primary stepper-completed:bg-success bg-base-content/20 h-px w-full group-last:hidden max-md:mt-2 max-md:h-8 max-md:w-px md:flex-1">
+            </div>
+        </li>
+        <li class="group flex flex-1 flex-col items-center gap-2 md:flex-row" data-stepper-nav-item='{ "index": 3 }'>
+            <span class="min-h-7.5 min-w-7.5 inline-flex flex-col items-center gap-2 align-middle text-sm md:flex-row">
+                <span
+                    class="stepper-active:text-bg-primary stepper-active:shadow-sm shadow-base-300/20 stepper-success:text-bg-primary stepper-success:shadow-sm stepper-completed:text-bg-success stepper-error:text-bg-error text-bg-soft-neutral flex size-7.5 shrink-0 items-center justify-center rounded-full font-medium">
+                    <span class="stepper-success:hidden stepper-error:hidden stepper-completed:hidden text-sm">3</span>
+                    <span class="icon-[tabler--check] stepper-success:block hidden size-4 shrink-0"></span>
+                    <span class="icon-[tabler--x] stepper-error:block hidden size-4 shrink-0"></span>
+                </span>
+                <span class="text-base-content text-nowrap font-medium">Dates & Budget</span>
+            </span>
+            <div
+                class="stepper-success:bg-primary stepper-completed:bg-success bg-base-content/20 h-px w-full group-last:hidden max-md:mt-2 max-md:h-8 max-md:w-px md:flex-1">
+            </div>
+        </li>
+    </ul>
+    <!-- End Stepper Nav -->
+
+    <!-- Stepper Content -->
+    <form method="post" id="wizard-validation-form-horizontal" class="needs-validation mt-5 sm:mt-8">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-error mb-4">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <!-- Step 1: Basic Info -->
+        <div id="step-1-content" class="space-y-5" data-stepper-content-item='{ "index": 1 }'>
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="label-text" for="{{ form.name.id_for_label }}">Project Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                    <p class="text-error text-sm mt-1">{{ form.name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="label-text" for="{{ form.client.id_for_label }}">Client</label>
+                    {{ form.client }}
+                    {% if form.client.errors %}
+                    <p class="text-error text-sm mt-1">{{ form.client.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="label-text" for="{{ form.status.id_for_label }}">Status</label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                    <p class="text-error text-sm mt-1">{{ form.status.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Details -->
+        <div id="step-2-content" class="space-y-5" data-stepper-content-item='{ "index": 2 }' style="display: none">
+            <div>
+                <label class="label-text" for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <p class="text-error text-sm mt-1">{{ form.description.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Step 3: Dates & Budget -->
+        <div id="step-3-content" class="space-y-5" data-stepper-content-item='{ "index": 3 }' style="display: none">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                    <label class="label-text" for="{{ form.start_date.id_for_label }}">Start Date</label>
+                    {{ form.start_date }}
+                    {% if form.start_date.errors %}
+                    <p class="text-error text-sm mt-1">{{ form.start_date.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label class="label-text" for="{{ form.deadline.id_for_label }}">Deadline</label>
+                    {{ form.deadline }}
+                    {% if form.deadline.errors %}
+                    <p class="text-error text-sm mt-1">{{ form.deadline.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <label class="label-text" for="{{ form.budget.id_for_label }}">Budget</label>
+                {{ form.budget }}
+                {% if form.budget.errors %}
+                <p class="text-error text-sm mt-1">{{ form.budget.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Button Group -->
+        <div class="mt-5 flex items-center justify-between gap-y-2">
+            <div class="flex gap-2">
+                <a href="{% url 'project_list' %}" class="btn btn-ghost">Cancel</a>
+                <button type="button" class="btn btn-primary btn-prev max-sm:btn-square" data-stepper-back-btn="">
+                    <span class="icon-[tabler--chevron-left] text-primary-content size-5 rtl:rotate-180"></span>
+                    <span class="max-sm:hidden">Back</span>
+                </button>
+            </div>
+            <button type="button" class="btn btn-primary btn-next max-sm:btn-square" data-stepper-next-btn="">
+                <span class="max-sm:hidden">Next</span>
+                <span class="icon-[tabler--chevron-right] text-primary-content size-5 rtl:rotate-180"></span>
+            </button>
+            <button type="submit" class="btn btn-success" data-stepper-finish-btn="" style="display: none">
+                Save Project
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    (function () {
+        const stepper = document.getElementById('wizard-validation-horizontal');
+        if (!stepper) return;
+
+        const navItems = stepper.querySelectorAll('[data-stepper-nav-item]');
+        const contentItems = stepper.querySelectorAll('[data-stepper-content-item]');
+        const backBtn = stepper.querySelector('[data-stepper-back-btn]');
+        const nextBtn = stepper.querySelector('[data-stepper-next-btn]');
+        const finishBtn = stepper.querySelector('[data-stepper-finish-btn]');
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateStepper() {
+            // Update Nav
+            navItems.forEach(item => {
+                const index = parseInt(JSON.parse(item.dataset.stepperNavItem).index);
+                const circle = item.querySelector('span > span');
+                const checkIcon = circle.querySelector('.icon-\\[tabler--check\\]');
+                const numberSpan = circle.querySelector('span:not([class*="icon"])');
+
+                // Reset classes
+                circle.classList.remove('bg-brand', 'text-white', 'bg-success', 'text-white');
+                circle.classList.add('text-bg-soft-neutral');
+                checkIcon.classList.add('hidden');
+                numberSpan.classList.remove('hidden');
+
+                if (index < currentStep) {
+                    // Completed
+                    circle.classList.remove('text-bg-soft-neutral');
+                    circle.classList.add('bg-success', 'text-white');
+                    checkIcon.classList.remove('hidden');
+                    numberSpan.classList.add('hidden');
+                } else if (index === currentStep) {
+                    // Active
+                    circle.classList.remove('text-bg-soft-neutral');
+                    circle.classList.add('bg-brand', 'text-white');
+                }
+            });
+
+            // Update Content
+            contentItems.forEach(item => {
+                const index = parseInt(JSON.parse(item.dataset.stepperContentItem).index);
+                if (index === currentStep) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Update Buttons
+            if (currentStep === 1) {
+                backBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-flex';
+                finishBtn.style.display = 'none';
+            } else if (currentStep === totalSteps) {
+                backBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'inline-flex';
+            } else {
+                backBtn.style.display = 'inline-flex';
+                nextBtn.style.display = 'inline-flex';
+                finishBtn.style.display = 'none';
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            // Simple validation check for current step inputs
+            const currentContent = stepper.querySelector(`[data-stepper-content-item='{ "index": ${currentStep} }']`);
+            const inputs = currentContent.querySelectorAll('input, textarea, select');
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    valid = false;
+                    input.reportValidity();
+                }
+            });
+
+            if (valid && currentStep < totalSteps) {
+                currentStep++;
+                updateStepper();
+            }
+        });
+
+        backBtn.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepper();
+            }
+        });
+
+        // Initialize
+        updateStepper();
+    })();
+</script>
