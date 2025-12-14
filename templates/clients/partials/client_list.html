@@ -1,0 +1,53 @@
+<div
+    class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default flex-1 flex flex-col">
+    <table class="w-full text-sm text-left rtl:text-right text-body">
+        <caption class="p-5 text-lg font-medium text-left rtl:text-right text-heading bg-neutral-primary-soft">
+            <div class="flex justify-between items-center">
+                <div>
+                    Clients
+                    <p class="mt-1.5 text-sm font-normal text-body">Manage your client base, view details, and track
+                        interactions.</p>
+                </div>
+                <a href="{% url 'client_create' %}"
+                    class="text-white bg-brand hover:bg-brand-strong focus:ring-4 focus:ring-brand-medium font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">Add
+                    Client</a>
+            </div>
+        </caption>
+        <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
+            <tr>
+                <th scope="col" class="px-6 py-3 font-medium">Name</th>
+                <th scope="col" class="px-6 py-3 font-medium">Company</th>
+                <th scope="col" class="px-6 py-3 font-medium">Email</th>
+                <th scope="col" class="px-6 py-3 font-medium">Phone</th>
+                <th scope="col" class="px-6 py-3 font-medium">Short Code</th>
+                <th scope="col" class="px-6 py-3 font-medium"><span class="sr-only">Actions</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr
+                class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-soft transition-colors">
+                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                    {{ client.name }}
+                </th>
+                <td class="px-6 py-4">{{ client.company_name }}</td>
+                <td class="px-6 py-4">{{ client.email }}</td>
+                <td class="px-6 py-4">{{ client.phone }}</td>
+                <td class="px-6 py-4"><span class="badge badge-ghost badge-sm">{{ client.short_code }}</span></td>
+                <td class="px-6 py-4 text-right space-x-2">
+                    <a href="{% url 'client_edit' client.pk %}" class="font-medium text-brand hover:underline">Edit</a>
+                    <form action="{% url 'client_delete' client.pk %}" method="post" class="inline"
+                        onsubmit="return confirm('Are you sure?');">
+                        {% csrf_token %}
+                        <button type="submit" class="font-medium text-error hover:underline">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-body">No clients found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,10 @@
+{% extends "shared/base.html" %}
+{% load static %}
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-24 px-4 max-w-7xl mx-auto min-h-screen flex flex-col pb-10">
+    {% include "clients/partials/client_list.html" %}
+</div>
+
+{% endblock %}

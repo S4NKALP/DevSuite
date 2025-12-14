@@ -50,7 +50,6 @@ def logout_view(request):
 def dashboard(request):
     # Date ranges
     today = timezone.now().date()
-    week_ago = today - timedelta(days=7)
     month_ago = today - timedelta(days=30)
 
     # Core metrics
