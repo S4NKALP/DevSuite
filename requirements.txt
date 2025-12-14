@@ -12,4 +12,4 @@ dj-database-url
 django-htmx
 django-phonenumber-field[phonenumbers]
 django-browser-reload
-django-tailwind-css
+django-tailwind-cli
