@@ -72,7 +72,8 @@
                 <div>
                     <label class="label-text" for="{{ form.short_code.id_for_label }}">Short Code</label>
                     <input type="text" name="{{ form.short_code.name }}" id="{{ form.short_code.id_for_label }}"
-                        value="{{ form.short_code.value|default:'' }}" class="input w-full" placeholder="Optional" />
+                        value="{{ form.short_code.value|default:'' }}" class="input w-full bg-base-200"
+                        placeholder="Auto-generated" disabled />
                     {% if form.short_code.errors %}
                     <p class="text-error text-sm mt-1">{{ form.short_code.errors.0 }}</p>
                     {% endif %}
@@ -106,9 +107,9 @@
                 </div>
                 <div>
                     <label class="label-text" for="{{ form.phone.id_for_label }}">Phone</label>
-                    <!-- Using simple input for phone to avoid widget complexity for now -->
-                    <input type="tel" name="{{ form.phone.name }}_0" id="{{ form.phone.id_for_label }}_0"
-                        value="{{ form.phone.value.0|default:'' }}" class="input w-full" placeholder="Phone Number" />
+                    <div class="join w-full">
+                        {{ form.phone }}
+                    </div>
                     {% if form.phone.errors %}
                     <p class="text-error text-sm mt-1">{{ form.phone.errors.0 }}</p>
                     {% endif %}
@@ -150,10 +151,41 @@
     </form>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.49/libphonenumber-js.min.js"></script>
 <script>
     (function () {
         const stepper = document.getElementById('wizard-validation-horizontal');
         if (!stepper) return;
+
+        // Phone Validation Logic
+        const phoneSelect = stepper.querySelector('select[name$="_0"]');
+        const phoneInput = stepper.querySelector('input[name$="_1"]');
+
+        if (phoneSelect && phoneInput) {
+            const validatePhone = () => {
+                const country = phoneSelect.value;
+                const number = phoneInput.value;
+
+                // Clear previous validation styles
+                phoneInput.classList.remove('input-error', 'input-success');
+
+                if (!number) return; // Allow empty if not required, or handle required check separately
+
+                try {
+                    if (libphonenumber.isValidPhoneNumber(number, country)) {
+                        phoneInput.classList.add('input-success');
+                    } else {
+                        phoneInput.classList.add('input-error');
+                    }
+                } catch (e) {
+                    console.error("Phone validation error:", e);
+                    phoneInput.classList.add('input-error');
+                }
+            };
+
+            phoneInput.addEventListener('input', validatePhone);
+            phoneSelect.addEventListener('change', validatePhone);
+        }
 
         const navItems = stepper.querySelectorAll('[data-stepper-nav-item]');
         const contentItems = stepper.querySelectorAll('[data-stepper-content-item]');
