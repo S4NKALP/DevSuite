@@ -5,6 +5,7 @@ from django.views.decorators.http import require_http_methods
 from src.models.clients import Client
 from src.models.finance import Expense, Invoice
 from src.models.projects import Project
+from src.models.services import Service
 
 
 def finance_dashboard(request):
@@ -45,22 +46,18 @@ def invoice_create(request):
     if request.method == "POST":
         client_id = request.POST.get("client")
         project_id = request.POST.get("project")
-        invoice_number = request.POST.get("invoice_number")
         amount = request.POST.get("amount")
-        date_issued = request.POST.get("date_issued")
         due_date = request.POST.get("due_date")
         status = request.POST.get("status")
 
-        if client_id and invoice_number and amount:
+        if client_id and project_id and amount and due_date:
             client = get_object_or_404(Client, id=client_id)
-            project = get_object_or_404(Project, id=project_id) if project_id else None
+            project = get_object_or_404(Project, id=project_id)
 
             Invoice.objects.create(
                 client=client,
                 project=project,
-                invoice_number=invoice_number,
                 amount=amount,
-                date_issued=date_issued,
                 due_date=due_date,
                 status=status,
             )
@@ -78,21 +75,17 @@ def invoice_edit(request, pk):
     if request.method == "POST":
         client_id = request.POST.get("client")
         project_id = request.POST.get("project")
-        invoice_number = request.POST.get("invoice_number")
         amount = request.POST.get("amount")
-        date_issued = request.POST.get("date_issued")
         due_date = request.POST.get("due_date")
         status = request.POST.get("status")
 
-        if client_id and invoice_number and amount:
+        if client_id and project_id and amount and due_date:
             client = get_object_or_404(Client, id=client_id)
-            project = get_object_or_404(Project, id=project_id) if project_id else None
+            project = get_object_or_404(Project, id=project_id)
 
             invoice.client = client
             invoice.project = project
-            invoice.invoice_number = invoice_number
             invoice.amount = amount
-            invoice.date_issued = date_issued
             invoice.due_date = due_date
             invoice.status = status
             invoice.save()
@@ -127,14 +120,24 @@ def expense_create(request):
         amount = request.POST.get("amount")
         date = request.POST.get("date")
         category = request.POST.get("category")
+        service_id = request.POST.get("service")
 
         if description and amount and date:
+            service = None
+            if service_id:
+                service = get_object_or_404(Service, id=service_id)
+
             Expense.objects.create(
-                description=description, amount=amount, date=date, category=category
+                description=description,
+                amount=amount,
+                date=date,
+                category=category,
+                service=service,
             )
             return redirect("finance_dashboard")
 
-    return render(request, "finance/expense_form.html")
+    services = Service.objects.all()
+    return render(request, "finance/expense_form.html", {"services": services})
 
 
 def expense_edit(request, pk):
@@ -144,16 +147,27 @@ def expense_edit(request, pk):
         amount = request.POST.get("amount")
         date = request.POST.get("date")
         category = request.POST.get("category")
+        service_id = request.POST.get("service")
 
         if description and amount and date:
+            service = None
+            if service_id:
+                service = get_object_or_404(Service, id=service_id)
+
             expense.description = description
             expense.amount = amount
             expense.date = date
             expense.category = category
+            expense.service = service
             expense.save()
             return redirect("finance_dashboard")
 
-    return render(request, "finance/expense_form.html", {"expense": expense})
+    services = Service.objects.all()
+    return render(
+        request,
+        "finance/expense_form.html",
+        {"expense": expense, "services": services},
+    )
 
 
 @require_http_methods(["DELETE", "POST"])
