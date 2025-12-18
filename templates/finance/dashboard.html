@@ -28,8 +28,9 @@
 
             <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
                 <div class="stat-title text-body">Net Profit</div>
-                <div class="stat-value {% if net_profit >= 0 %}text-success{% else %}text-error{% endif %}">Rs.{{
-                    net_profit|floatformat:2 }}</div>
+                <div class="stat-value {% if net_profit >= 0 %}text-success{% else %}text-error{% endif %}">
+                    Rs.{{ net_profit|floatformat:2 }}
+                </div>
             </div>
 
             <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
