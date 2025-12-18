@@ -1,0 +1,89 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-heading">Notifications</h1>
+            <a href="{% url 'notification_list' %}" class="btn btn-ghost btn-sm">View All</a>
+        </div>
+
+        <!-- Top Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Pending</div>
+                <div class="stat-value text-warning">{{ pending_count }}</div>
+                <div class="stat-desc text-body-secondary">Waiting to be sent</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Sent</div>
+                <div class="stat-value text-success">{{ sent_count }}</div>
+                <div class="stat-desc text-body-secondary">Successfully delivered</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Failed</div>
+                <div class="stat-value text-error">{{ failed_count }}</div>
+                <div class="stat-desc text-body-secondary">Need attention</div>
+            </div>
+        </div>
+
+        <!-- Recent Notifications -->
+        <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-heading">Recent Notifications</h2>
+                <a href="{% url 'notification_list' %}" class="btn btn-ghost btn-xs">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                        <tr class="text-body border-b border-default">
+                            <th>Recipient</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Sent At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for n in recent_notifications %}
+                        <tr class="hover:bg-neutral-tertiary border-b border-default last:border-0">
+                            <td class="text-body">{{ n.recipient }}</td>
+                            <td class="font-medium text-heading">
+                                <a href="{% url 'notification_detail' n.pk %}" class="link link-hover">
+                                    {{ n.subject }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge badge-sm
+                                    {% if n.status == 'SENT' %}badge-success
+                                    {% elif n.status == 'FAILED' %}badge-error
+                                    {% else %}badge-warning{% endif %}">
+                                    {{ n.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-body-secondary text-sm">
+                                {{ n.created_at|date:"M d, Y H:i" }}
+                            </td>
+                            <td class="text-body-secondary text-sm">
+                                {% if n.sent_at %}{{ n.sent_at|date:"M d, Y H:i" }}{% else %}-{% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-body-secondary py-4">No notifications yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

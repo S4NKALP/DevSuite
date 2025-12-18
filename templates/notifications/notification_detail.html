@@ -1,0 +1,71 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-heading">Notification Detail</h1>
+        </div>
+
+        <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6 space-y-4">
+            <div>
+                <h2 class="text-sm font-semibold text-body-secondary uppercase tracking-wide">Recipient</h2>
+                <p class="text-heading">{{ notification.recipient }}</p>
+            </div>
+
+            <div>
+                <h2 class="text-sm font-semibold text-body-secondary uppercase tracking-wide">Subject</h2>
+                <p class="text-heading">{{ notification.subject }}</p>
+            </div>
+
+            <div>
+                <h2 class="text-sm font-semibold text-body-secondary uppercase tracking-wide">Status</h2>
+                <span class="badge
+                    {% if notification.status == 'SENT' %}badge-success
+                    {% elif notification.status == 'FAILED' %}badge-error
+                    {% else %}badge-warning{% endif %}">
+                    {{ notification.get_status_display }}
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h2 class="text-sm font-semibold text-body-secondary uppercase tracking-wide">Created At</h2>
+                    <p class="text-body-secondary text-sm">
+                        {{ notification.created_at|date:"M d, Y H:i" }}
+                    </p>
+                </div>
+                <div>
+                    <h2 class="text-sm font-semibold text-body-secondary uppercase tracking-wide">Sent At</h2>
+                    <p class="text-body-secondary text-sm">
+                        {% if notification.sent_at %}{{ notification.sent_at|date:"M d, Y H:i" }}{% else %}-{% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-sm font-semibold text-body-secondary uppercase tracking-wide">Message</h2>
+                <pre class="mt-2 p-4 bg-base-100 rounded-lg border border-default text-sm text-body whitespace-pre-wrap">{{ notification.message }}</pre>
+            </div>
+
+            {% if notification.content_object %}
+            <div>
+                <h2 class="text-sm font-semibold text-body-secondary uppercase tracking-wide">Related Object</h2>
+                <p class="text-body text-sm">
+                    {{ notification.content_type }} — ID {{ notification.object_id }}
+                </p>
+            </div>
+            {% endif %}
+
+            <div class="pt-4 flex justify-end">
+                <a href="{% url 'notification_list' %}" class="btn btn-ghost">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
