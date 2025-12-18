@@ -1,0 +1,95 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-heading">{% if invoice %}Edit Invoice{% else %}Create Invoice{% endif %}
+            </h1>
+        </div>
+
+        <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- Client -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Client</span>
+                    </label>
+                    <select name="client" class="select select-bordered w-full" required>
+                        <option value="" disabled {% if not invoice %}selected{% endif %}>Select a client</option>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}" {% if invoice and invoice.client.id == client.id %}selected{% endif %}>
+                            {{ client.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Project -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Project</span>
+                    </label>
+                    <select name="project" class="select select-bordered w-full" required>
+                        <option value="" disabled {% if not invoice %}selected{% endif %}>Select a project</option>
+                        {% for project in projects %}
+                        <option value="{{ project.id }}" {% if invoice and invoice.project.id == project.id %}selected{% endif %}>
+                            {{ project.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Amount -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Amount</span>
+                    </label>
+                    <input type="number" step="0.01" name="amount" placeholder="0.00"
+                        class="input input-bordered w-full" value="{{ invoice.amount|default:'' }}" required />
+                </div>
+
+                <!-- Due Date -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Due Date</span>
+                    </label>
+                    <input type="date" name="due_date" class="input input-bordered w-full"
+                        value="{{ invoice.due_date|date:'Y-m-d' }}" required />
+                </div>
+
+                <!-- Status -->
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Status</span>
+                    </label>
+                    <select name="status" class="select select-bordered w-full" required>
+                        <option value="DRAFT" {% if invoice and invoice.status == 'DRAFT' %}selected{% endif %}>Draft
+                        </option>
+                        <option value="SENT" {% if invoice and invoice.status == 'SENT' %}selected{% endif %}>Sent
+                        </option>
+                        <option value="PAID" {% if invoice and invoice.status == 'PAID' %}selected{% endif %}>Paid
+                        </option>
+                        <option value="OVERDUE" {% if invoice and invoice.status == 'OVERDUE' %}selected{% endif %}>
+                            Overdue</option>
+                        <option value="CANCELLED" {% if invoice and invoice.status == 'CANCELLED' %}selected{% endif %}>
+                            Cancelled</option>
+                    </select>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex justify-end space-x-4 mt-8">
+                    <a href="{% url 'finance_dashboard' %}" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary">{% if invoice %}Update Invoice{% else %}Create
+                        Invoice{% endif %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "shared/base.html" %}
+{% load static %}
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-heading">Finance Dashboard</h1>
+            <div class="flex space-x-4">
+                <a href="{% url 'invoice_create' %}" class="btn btn-primary btn-sm">New Invoice</a>
+                <a href="{% url 'expense_create' %}" class="btn btn-secondary btn-sm">New Expense</a>
+            </div>
+        </div>
+
+        <!-- Top Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Total Income</div>
+                <div class="stat-value text-success">Rs.{{ total_income|floatformat:2 }}</div>
+                <div class="stat-desc text-body-secondary">Paid Invoices</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Total Expenses</div>
+                <div class="stat-value text-error">Rs.{{ total_expenses|floatformat:2 }}</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Net Profit</div>
+                <div class="stat-value {% if net_profit >= 0 %}text-success{% else %}text-error{% endif %}">Rs.{{
+                    net_profit|floatformat:2 }}</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Pending Income</div>
+                <div class="stat-value text-warning">Rs.{{ pending_income|floatformat:2 }}</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Invoices -->
+            <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-heading">Recent Invoices</h2>
+                    <a href="{% url 'invoice_list' %}" class="btn btn-ghost btn-xs">View All</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead>
+                            <tr class="text-body border-b border-default">
+                                <th>Number</th>
+                                <th>Client</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for invoice in invoices %}
+                            <tr class="hover:bg-neutral-tertiary border-b border-default last:border-0">
+                                <td class="font-medium text-heading">#{{ invoice.invoice_number }}</td>
+                                <td class="text-body">{{ invoice.client.name }}</td>
+                                <td class="text-body">Rs.{{ invoice.amount|floatformat:2 }}</td>
+                                <td>
+                                    <span
+                                        class="badge {% if invoice.status == 'PAID' %}badge-success{% elif invoice.status == 'OVERDUE' %}badge-error{% else %}badge-warning{% endif %} badge-sm">
+                                        {{ invoice.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-body-secondary py-4">No recent invoices</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Expenses -->
+            <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-heading">Recent Expenses</h2>
+                    <a href="{% url 'expense_list' %}" class="btn btn-ghost btn-xs">View All</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead>
+                            <tr class="text-body border-b border-default">
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expenses %}
+                            <tr class="hover:bg-neutral-tertiary border-b border-default last:border-0">
+                                <td class="font-medium text-heading">{{ expense.description }}</td>
+                                <td class="text-body">{{ expense.category }}</td>
+                                <td class="text-body">Rs.{{ expense.amount|floatformat:2 }}</td>
+                                <td class="text-body-secondary text-sm">{{ expense.date|date:"M d" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-body-secondary py-4">No recent expenses</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

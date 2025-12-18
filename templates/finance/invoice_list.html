@@ -1,0 +1,72 @@
+{% extends "shared/base.html" %}
+{% load static %}
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-heading">Invoices</h1>
+            <a href="{% url 'invoice_create' %}" class="btn btn-primary btn-sm">Create Invoice</a>
+        </div>
+
+        <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                        <tr class="text-body border-b border-default">
+                            <th>Invoice #</th>
+                            <th>Client</th>
+                            <th>Project</th>
+                            <th>Amount</th>
+                            <th>Date Issued</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for invoice in invoices %}
+                        <tr class="hover:bg-neutral-tertiary border-b border-default last:border-0">
+                            <td class="font-medium text-heading">#{{ invoice.invoice_number }}</td>
+                            <td class="text-body">{{ invoice.client.name }}</td>
+                            <td class="text-body">
+                                {% if invoice.project %}
+                                    {{ invoice.project.name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="text-body">Rs.{{ invoice.amount|floatformat:2 }}</td>
+                            <td class="text-body-secondary">{{ invoice.date_issued }}</td>
+                            <td class="text-body-secondary">{{ invoice.due_date }}</td>
+                            <td>
+                                <span
+                                    class="badge {% if invoice.status == 'PAID' %}badge-success{% elif invoice.status == 'OVERDUE' %}badge-error{% else %}badge-warning{% endif %} badge-sm">
+                                    {{ invoice.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <a href="{% url 'invoice_edit' invoice.pk %}" class="btn btn-ghost btn-xs">Edit</a>
+                                    <button hx-delete="{% url 'invoice_delete' invoice.pk %}"
+                                        hx-confirm="Are you sure you want to delete this invoice?"
+                                        hx-target="closest tr" hx-swap="outerHTML"
+                                        class="btn btn-ghost btn-xs text-error">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center text-body-secondary py-4">No invoices found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
