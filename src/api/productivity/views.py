@@ -9,12 +9,14 @@ from src.models.projects import Project, Task
 
 def productivity_dashboard(request):
     recent_notes = Note.objects.all()[:5]
-    recent_time_entries = (
-        TimeEntry.objects.select_related("project", "task").all()[:5]
-    )
+    recent_time_entries = TimeEntry.objects.select_related("project", "task").all()[:5]
     total_tracked_hours = (
         sum(
-            (entry.duration.total_seconds() for entry in recent_time_entries if entry.duration),
+            (
+                entry.duration.total_seconds()
+                for entry in recent_time_entries
+                if entry.duration
+            ),
             0,
         )
         / 3600
@@ -106,7 +108,9 @@ def timeentry_create(request):
         end_time = _parse_datetime(end_time_raw)
 
         if description and start_time:
-            project = Project.objects.filter(id=project_id).first() if project_id else None
+            project = (
+                Project.objects.filter(id=project_id).first() if project_id else None
+            )
             task = Task.objects.filter(id=task_id).first() if task_id else None
 
             TimeEntry.objects.create(
@@ -141,8 +145,12 @@ def timeentry_edit(request, pk):
         end_time = _parse_datetime(end_time_raw)
 
         if description and start_time:
-            time_entry.project = Project.objects.filter(id=project_id).first() if project_id else None
-            time_entry.task = Task.objects.filter(id=task_id).first() if task_id else None
+            time_entry.project = (
+                Project.objects.filter(id=project_id).first() if project_id else None
+            )
+            time_entry.task = (
+                Task.objects.filter(id=task_id).first() if task_id else None
+            )
             time_entry.description = description
             time_entry.start_time = start_time
             time_entry.end_time = end_time
@@ -162,5 +170,3 @@ def timeentry_delete(request, pk):
     time_entry = get_object_or_404(TimeEntry, pk=pk)
     time_entry.delete()
     return redirect("timeentry_list")
-
-
