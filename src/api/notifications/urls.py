@@ -7,5 +7,3 @@ urlpatterns = [
     path("list/", views.notification_list, name="notification_list"),
     path("<int:pk>/detail/", views.notification_detail, name="notification_detail"),
 ]
-
-

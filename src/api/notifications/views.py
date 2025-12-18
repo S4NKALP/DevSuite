@@ -37,5 +37,3 @@ def notification_detail(request, pk):
         "notifications/notification_detail.html",
         {"notification": notification},
     )
-
-
