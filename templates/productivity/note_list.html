@@ -1,0 +1,51 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-heading">Notes</h1>
+            <a href="{% url 'note_create' %}" class="btn btn-primary btn-sm">New Note</a>
+        </div>
+
+        <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+            {% if notes %}
+            <div class="space-y-4">
+                {% for note in notes %}
+                <div class="border border-default rounded-lg p-4 bg-base-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-lg font-semibold text-heading">{{ note.title }}</h2>
+                            <p class="mt-2 text-body whitespace-pre-line">{{ note.content }}</p>
+                        </div>
+                        <div class="flex flex-col items-end space-y-2">
+                            <span class="text-xs text-body-secondary">
+                                {{ note.updated_at|date:"M d, Y H:i" }}
+                            </span>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'note_edit' note.pk %}" class="btn btn-ghost btn-xs">Edit</a>
+                                <form method="post" action="{% url 'note_delete' note.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-ghost btn-xs text-error"
+                                        onclick="return confirm('Delete this note?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-body-secondary text-center py-8">No notes yet. Create your first note!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

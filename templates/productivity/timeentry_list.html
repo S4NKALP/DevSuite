@@ -1,0 +1,73 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-heading">Time Entries</h1>
+            <a href="{% url 'timeentry_create' %}" class="btn btn-primary btn-sm">Log Time</a>
+        </div>
+
+        <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead>
+                        <tr class="text-body border-b border-default">
+                            <th>Description</th>
+                            <th>Project</th>
+                            <th>Task</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Duration</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in time_entries %}
+                        <tr class="hover:bg-neutral-tertiary border-b border-default last:border-0">
+                            <td class="font-medium text-heading">{{ entry.description }}</td>
+                            <td class="text-body">
+                                {% if entry.project %}{{ entry.project.name }}{% else %}-{% endif %}
+                            </td>
+                            <td class="text-body">
+                                {% if entry.task %}{{ entry.task.title }}{% else %}-{% endif %}
+                            </td>
+                            <td class="text-body-secondary text-sm">
+                                {{ entry.start_time|date:"M d, Y H:i" }}
+                            </td>
+                            <td class="text-body-secondary text-sm">
+                                {% if entry.end_time %}{{ entry.end_time|date:"M d, Y H:i" }}{% else %}In Progress{% endif %}
+                            </td>
+                            <td class="text-body-secondary text-sm">
+                                {% if entry.duration %}{{ entry.duration }}{% else %}-{% endif %}
+                            </td>
+                            <td>
+                                <div class="flex space-x-2">
+                                    <a href="{% url 'timeentry_edit' entry.pk %}" class="btn btn-ghost btn-xs">Edit</a>
+                                    <form method="post" action="{% url 'timeentry_delete' entry.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-ghost btn-xs text-error"
+                                            onclick="return confirm('Delete this time entry?');">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-body-secondary py-4">No time entries yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

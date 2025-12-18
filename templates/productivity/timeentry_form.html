@@ -1,0 +1,87 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-heading">
+                {% if time_entry %}Edit Time Entry{% else %}Log Time{% endif %}
+            </h1>
+        </div>
+
+        <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Project (optional)</span>
+                    </label>
+                    <select name="project" class="select select-bordered w-full">
+                        <option value="">None</option>
+                        {% for project in projects %}
+                        <option value="{{ project.id }}"
+                            {% if time_entry and time_entry.project and time_entry.project.id == project.id %}selected{% endif %}>
+                            {{ project.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Task (optional)</span>
+                    </label>
+                    <select name="task" class="select select-bordered w-full">
+                        <option value="">None</option>
+                        {% for task in tasks %}
+                        <option value="{{ task.id }}"
+                            {% if time_entry and time_entry.task and time_entry.task.id == task.id %}selected{% endif %}>
+                            {{ task.title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">Description</span>
+                    </label>
+                    <input type="text" name="description" class="input input-bordered w-full" required
+                        value="{{ time_entry.description|default:'' }}" />
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">Start Time</span>
+                        </label>
+                        <input type="datetime-local" name="start_time" class="input input-bordered w-full" required
+                            value="{% if time_entry and time_entry.start_time %}{{ time_entry.start_time|date:'Y-m-d\\TH:i' }}{% endif %}" />
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text">End Time (optional)</span>
+                        </label>
+                        <input type="datetime-local" name="end_time" class="input input-bordered w-full"
+                            value="{% if time_entry and time_entry.end_time %}{{ time_entry.end_time|date:'Y-m-d\\TH:i' }}{% endif %}" />
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4 mt-8">
+                    <a href="{% url 'timeentry_list' %}" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        {% if time_entry %}Update Entry{% else %}Save Entry{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

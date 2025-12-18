@@ -1,0 +1,115 @@
+{% extends "shared/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "shared/navbar.html" %}
+
+<div class="pt-20 min-h-screen flex flex-col pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-heading">Productivity Dashboard</h1>
+            <div class="flex space-x-4">
+                <a href="{% url 'note_create' %}" class="btn btn-primary btn-sm">New Note</a>
+                <a href="{% url 'timeentry_create' %}" class="btn btn-secondary btn-sm">Log Time</a>
+            </div>
+        </div>
+
+        <!-- Top Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Recent Notes</div>
+                <div class="stat-value text-heading">{{ recent_notes|length }}</div>
+                <div class="stat-desc text-body-secondary">Last {{ recent_notes|length }} notes</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Recent Time Entries</div>
+                <div class="stat-value text-heading">{{ recent_time_entries|length }}</div>
+                <div class="stat-desc text-body-secondary">Tracked sessions</div>
+            </div>
+
+            <div class="stat bg-neutral-secondary-soft rounded-lg shadow-sm border border-default">
+                <div class="stat-title text-body">Tracked Hours (Recent)</div>
+                <div class="stat-value text-success">{{ total_tracked_hours|floatformat:2 }}</div>
+                <div class="stat-desc text-body-secondary">From recent entries</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Recent Notes -->
+            <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-heading">Recent Notes</h2>
+                    <a href="{% url 'note_list' %}" class="btn btn-ghost btn-xs">View All</a>
+                </div>
+                <div class="space-y-4">
+                    {% for note in recent_notes %}
+                    <div class="border border-default rounded-lg p-4 bg-base-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-lg font-semibold text-heading">{{ note.title }}</h3>
+                                <p class="mt-1 text-sm text-body-secondary">
+                                    {{ note.created_at|date:"M d, Y H:i" }}
+                                </p>
+                            </div>
+                            <a href="{% url 'note_edit' note.pk %}" class="btn btn-ghost btn-xs">Edit</a>
+                        </div>
+                        <p class="mt-2 text-body line-clamp-3 whitespace-pre-line">
+                            {{ note.content }}
+                        </p>
+                    </div>
+                    {% empty %}
+                    <p class="text-body-secondary text-center py-4">No notes yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recent Time Entries -->
+            <div class="bg-neutral-secondary-soft rounded-lg shadow-sm border border-default p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-heading">Recent Time Entries</h2>
+                    <a href="{% url 'timeentry_list' %}" class="btn btn-ghost btn-xs">View All</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="table w-full">
+                        <thead>
+                            <tr class="text-body border-b border-default">
+                                <th>Description</th>
+                                <th>Project</th>
+                                <th>Task</th>
+                                <th>Start</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in recent_time_entries %}
+                            <tr class="hover:bg-neutral-tertiary border-b border-default last:border-0">
+                                <td class="font-medium text-heading">{{ entry.description }}</td>
+                                <td class="text-body">
+                                    {% if entry.project %}{{ entry.project.name }}{% else %}-{% endif %}
+                                </td>
+                                <td class="text-body">
+                                    {% if entry.task %}{{ entry.task.title }}{% else %}-{% endif %}
+                                </td>
+                                <td class="text-body-secondary text-sm">
+                                    {{ entry.start_time|date:"M d, Y H:i" }}
+                                </td>
+                                <td class="text-body-secondary text-sm">
+                                    {% if entry.duration %}{{ entry.duration }}{% else %}-{% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-body-secondary py-4">No time entries yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
